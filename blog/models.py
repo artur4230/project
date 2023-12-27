@@ -2,9 +2,9 @@ from django.db import models
 from django.conf import settings
 from django.urls import reverse
 from django.utils import timezone
+from django.template.defaultfilters import truncatewords
 from .managers import PostPublishedManager, PostManager
 from rest_framework import serializers
-
 
 # Create your models here.
 class Post(models.Model):
@@ -36,6 +36,8 @@ class Post(models.Model):
         Возвращает URL для просмотра полного текста поста.
         """
         return reverse('blog:post_detail', args=[str(self.id)])
+    def get_text_preview(self):
+        return truncatewords(self.text,10)
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
